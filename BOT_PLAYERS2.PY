@@ -11,7 +11,6 @@ bot = telebot.TeleBot(TOKEN)
 
 
 registered_users = {}
-
 OWNER_ID = 760424840
 ADMIN_IDS = []
 GROUP_ID = -4843010970
@@ -28,7 +27,7 @@ def is_admin(user_id):
 def build_text():
     final_text = post_text + "\nУчастники:\n"   
     reference = 1
-    
+    gang = 0 
     if registered_users:
         for user_id in registered_users:
             username = registered_users[user_id]["username"]
@@ -40,10 +39,15 @@ def build_text():
                 line += f"  +{plus_one}" 
 
             
-            final_text +=line + "\n"
+            final_text +=line + "\n" 
 
+            
+            gang += 1 + plus_one
+            
             reference+=1
-             
+        
+        final_text += f"\nКоличество мафиозников: {gang}"
+        
     else:
         final_text += "Пока никого нет"
     
