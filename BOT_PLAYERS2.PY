@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 registered_users = {}
 OWNER_ID = 760424840
 ADMIN_IDS = [478933251]
-GROUP_ID = -4843010970
+GROUP_ID = [-4843010970, -1002830983691]
 
 post_text = "🎭 Добро пожаловать на Мафию!\n\nПроведи вечер в классной компании, сыграй.\n\nНажимай кнопку ниже, чтобы записаться\n"
 posted_message_id = None
