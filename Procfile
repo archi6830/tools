@@ -1,0 +1,1 @@
+worker: python BOT_PLAYERS2.PY
