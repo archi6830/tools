@@ -150,11 +150,14 @@ def admin_set_post(message):
         if not is_admin(message.from_user.id):
             bot.reply_to(message, "Нет прав")
             return
-        if not is_admin(message.from_user.id):
-            bot.reply_to(message, "Нет прав")
-            return
+      
         post_text = message.text
         bot.send_message(message.chat.id, "text updated")
-
+@bot.message_handler(commands=['clear'])
+def clear(message):
+    global registered_users
+    if not is_admin(message.from_user.id):
+        bot.reply_to(message, "Нет прав")
+        return
 # ----------------- RUN -----------------
 bot.polling(none_stop=True)
