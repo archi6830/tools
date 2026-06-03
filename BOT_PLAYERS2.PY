@@ -80,7 +80,7 @@ def check_time():
     now = datetime.now(CANADA_TZ)
 
     # вторник = 1 (Monday=0)
-    if now.weekday() == 3 and now.hour == 00 and now.minute == 15:
+    if now.weekday() == 2 and now.hour == 00 and now.minute == 33:
         send_weekly_message()
 def run_scheduler():
     while True:
