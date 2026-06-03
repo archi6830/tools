@@ -1,5 +1,11 @@
 from email.mime import message
 
+import schedule
+import time
+import threading
+import pytz
+from datetime import datetime
+
 import telebot
 from dotenv import load_dotenv 
 import os
@@ -8,7 +14,7 @@ from telebot import types
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN) 
-
+CANADA_TZ = pytz.timezone("America/Toronto")
 
 registered_users = {}
 OWNER_ID = 760424840
@@ -65,6 +71,22 @@ def build_markup():
     )
     return markup
 
+def send_weekly_message():
+    bot.send_message(
+        760424840,  
+        "🎭 Напоминание: Юльчик закинь текст для бота"
+    )
+def check_time():
+    now = datetime.now(CANADA_TZ)
+
+    # вторник = 1 (Monday=0)
+    if now.weekday() == 3 and now.hour == 00 and now.minute == 15:
+        send_weekly_message()
+def run_scheduler():
+    while True:
+        check_time()
+        time.sleep(60)
+threading.Thread(target=run_scheduler, daemon=True).start()
 
 # ----------------- SEND POST -----------------
 @bot.message_handler(commands=['post'])
