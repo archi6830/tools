@@ -73,14 +73,14 @@ def build_markup():
 
 def send_weekly_message():
     bot.send_message(
-        760424840,  
+        760424840, 478933251,  
         "🎭 Напоминание: Юльчик закинь текст для бота"
     )
 def check_time():
     now = datetime.now(CANADA_TZ)
 
     # вторник = 1 (Monday=0)
-    if now.weekday() == 2 and now.hour == 0 and now.minute == 45:
+    if now.weekday() == 1 and now.hour == 13 and now.minute == 30:
         send_weekly_message()
 def run_scheduler():
     while True:
