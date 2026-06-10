@@ -105,10 +105,8 @@ def post(message):
             group_id,
             build_text(),
             reply_markup=build_markup()
-    
     )
 
-    
     bot.reply_to(message, "Сообщение отправлено")
 
 
