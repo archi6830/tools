@@ -19,7 +19,7 @@ CANADA_TZ = pytz.timezone("America/Toronto")
 registered_users = {}
 OWNER_ID = 760424840
 ADMIN_IDS = [478933251]
-GROUP_ID = [-4843010970, -1002830983691]
+GROUP_IDS = [-4843010970, -1002830983691]
 
 post_text = "🎭 Добро пожаловать на Мафию!\n\nПроведи вечер в классной компании, сыграй.\n\nНажимай кнопку ниже, чтобы записаться\n"
 posted_message_id = None
@@ -73,7 +73,12 @@ def build_markup():
 
 def send_weekly_message():
     bot.send_message(
-        760424840, 478933251,  
+        760424840,
+        "🎭 Напоминание: Юльчик закинь текст для бота"
+    )
+
+    bot.send_message(
+        478933251,
         "🎭 Напоминание: Юльчик закинь текст для бота"
     )
 def check_time():
@@ -91,19 +96,19 @@ threading.Thread(target=run_scheduler, daemon=True).start()
 # ----------------- SEND POST -----------------
 @bot.message_handler(commands=['post'])
 def post(message):
-    global posted_message_id
 
     if not is_admin(message.from_user.id):
         bot.reply_to(message, "Нет прав")
         return
-
-    msg = bot.send_message(
-        GROUP_ID,
-        build_text(),
-        reply_markup=build_markup()
+    for group_id in GROUP_IDS:
+        bot.send_message(
+            group_id,
+            build_text(),
+            reply_markup=build_markup()
+    
     )
 
-    posted_message_id = msg.message_id
+    
     bot.reply_to(message, "Сообщение отправлено")
 
 
