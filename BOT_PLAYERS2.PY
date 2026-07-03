@@ -86,8 +86,6 @@ def build_markup():
         types.InlineKeyboardButton("Отписаться", callback_data="unregister"),
     )
     return markup
-
-
 # ----------------- CALLBACK -----------------
 @bot.callback_query_handler(func=lambda call: True)
 def callback(call):
