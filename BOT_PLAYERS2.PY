@@ -40,11 +40,36 @@ CREATE TABLE IF NOT EXISTS settings (
 # ----------------- BOT -----------------
 bot = telebot.TeleBot(TOKEN)
 
-CANADA_TZ = pytz.timezone("America/Toronto")
-
 OWNER_ID = 760424840
 ADMIN_IDS = [478933251]
 GROUP_IDS = [-4843010970, -1002830983691]
+
+CANADA_TZ = pytz.timezone("America/Toronto")
+
+def send_weekly_message():
+    bot.send_message(
+        760424840,
+        "🎭 Напоминание: Юльчик, закинь текст для бота"
+    )
+
+    bot.send_message(
+        478933251,
+        "🎭 Напоминание: Юльчик, закинь текст для бота"
+    )
+
+def check_time():
+    now = datetime.now(CANADA_TZ)
+
+    # Вторник
+    if now.weekday() == 1 and now.hour == 18 and now.minute == 0:
+        send_weekly_message()
+
+def run_scheduler():
+    while True:
+        check_time()
+        time.sleep(60)
+
+threading.Thread(target=run_scheduler, daemon=True).start()
 
 DEFAULT_POST_TEXT = "🎭 Добро пожаловать на Мафию!\n\nПроведи вечер в классной компании, сыграй.\n\nНажимай кнопку ниже, чтобы записаться\n"
 
@@ -62,7 +87,7 @@ def is_admin(user_id):
 
 # ----------------- TEXT -----------------
 def build_text():
-    final_text = get_post_text + "\nУчастники:\n"
+    final_text = get_post_text() + "\nУчастники:\n"
 
     cursor.execute("SELECT username, plus_one FROM users ORDER BY user_id")
     users = cursor.fetchall()
