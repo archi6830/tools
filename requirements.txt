@@ -2,3 +2,4 @@ pyTelegramBotAPI
 python-dotenv
 pytz
 schedule
+psycopg2-binary
