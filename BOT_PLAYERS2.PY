@@ -30,6 +30,13 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS settings (
+    key TEXT UNIQUE,
+    value TEXT
+)
+""")
+
 # ----------------- BOT -----------------
 bot = telebot.TeleBot(TOKEN)
 
@@ -39,8 +46,14 @@ OWNER_ID = 760424840
 ADMIN_IDS = [478933251]
 GROUP_IDS = [-4843010970, -1002830983691]
 
-post_text = "🎭 Добро пожаловать на Мафию!\n\nПроведи вечер в классной компании, сыграй.\n\nНажимай кнопку ниже, чтобы записаться\n"
+DEFAULT_POST_TEXT = "🎭 Добро пожаловать на Мафию!\n\nПроведи вечер в классной компании, сыграй.\n\nНажимай кнопку ниже, чтобы записаться\n"
 
+def get_post_text():
+    cursor.execute("SELECT value FROM settings WHERE key = %s", ("post_text",))
+    row = cursor.fetchone()
+    if row:
+        return row[0]
+    return DEFAULT_POST_TEXT
 
 # ----------------- ADMIN -----------------
 def is_admin(user_id):
@@ -49,7 +62,7 @@ def is_admin(user_id):
 
 # ----------------- TEXT -----------------
 def build_text():
-    final_text = post_text + "\nУчастники:\n"
+    final_text = get_post_text + "\nУчастники:\n"
 
     cursor.execute("SELECT username, plus_one FROM users ORDER BY user_id")
     users = cursor.fetchall()
@@ -180,6 +193,27 @@ def start(message):
         reply_markup=build_markup()
     )
 
+#-------------------Text Change-------------------
+@bot.message_handler(content_types=['text'])
+def admin_set_post(message):
+    if message.chat.type != "private":
+        return
+
+    if message.text.startswith("/"):
+        return
+
+    if not is_admin(message.from_user.id):
+        bot.reply_to(message, "Нет прав")
+        return
+
+    cursor.execute("""
+        INSERT INTO settings (key, value)
+        VALUES (%s, %s)
+        ON CONFLICT (key)
+        DO UPDATE SET value = EXCLUDED.value
+    """, ("post_text", message.text))
+
+    bot.send_message(message.chat.id, "Текст обновлён ✅")
 
 # ----------------- RUN -----------------
 bot.polling(none_stop=True)
